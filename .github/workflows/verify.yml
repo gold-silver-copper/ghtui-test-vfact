@@ -1,0 +1,27 @@
+name: Verify
+on:
+  workflow_dispatch:
+    inputs:
+      slow_ticks:
+        description: ticks of 5s for the slow job
+        default: "36"
+jobs:
+  fails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: |
+          echo "building"
+          echo "::error::It broke"
+          exit 1
+  slow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tick
+        run: for i in $(seq 1 ${{ inputs.slow_ticks }}); do echo "tick $i"; sleep 5; done
+      - name: After
+        run: echo done
+  passes:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok
